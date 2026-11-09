@@ -39,27 +39,28 @@ Stack: Python, Claude Code, PowerShell, git.
 
 ---
 
-## 2. School calendar agent (Aula)
+2. School calendar agent (Aula)
+Open source (MIT): https://github.com/ai-tvang/aula-kalender-agent
 
-Danish schools communicate through Aula: posts, message threads, PDFs, Word files and photos of handwritten notes. Dates for parent meetings, birthdays and duties are buried in all of it. This agent reads the week's new content and puts the dates that matter into my Outlook calendar.
+Danish schools communicate through Aula: posts, message threads, PDFs, Word files and photos of handwritten notes. Dates for parent meetings, birthdays and duties are buried in all of it. This agent replaces 100+ Aula checks a year with one email on Sunday and a calendar that updates itself.
 
-**What it does**
-- **Daily, without any LLM:** keeps the Aula login alive and syncs the school's calendar feeds and the sports club's calendar into one Outlook calendar.
-- **Weekly:** collects new posts and threads, extracts text from PDF and Word attachments, and passes everything to Claude with a plain-language rule file.
-  - Claude decides which child each item concerns, which events belong in the calendar, and what I need to bring or do.
-  - Claude reads images only when a date, time or place is still missing.
-- Creates or updates calendar events through Microsoft Graph. A content hash keeps reruns from creating duplicates or touching unchanged events.
-- Sends a short weekly email with what changed and anything that needs a human decision.
+What it does
 
-**Where it is wrong, and how I designed for it**
-- **Uncertainty is surfaced, not hidden.** If the agent is unsure about the date, the child, or whether a date is confirmed, the item goes to the weekly email as "uncertain" instead of into the calendar.
-- **Unconfirmed dates stay out.** "What suits everyone?" and "we're thinking maybe" are not calendar events. The latest confirmation in a thread wins.
-- **Overlaps are flagged.** When both children have something on the same day that needs a parent in two places, it is called out.
-- **No duplicates of existing events.** Existing calendar entries are passed in, and every run supports `--dry-run`.
-- **The rules are written for a human to read and edit.** When the agent gets something wrong, I fix the rule file, not the code.
+Every week it reads new posts, threads, attachments and week plans, and:
+- puts parent meetings, events, birthdays, reply deadlines and days off into Outlook, tagged with the child's name, and moves them when the school changes a date
+- sends one email with "remember this week": homework, trips, PE kit and when each child finishes school, day by day
+- lists the few things that need a parent's decision
 
-Stack: Python (uv), Aula client library, Microsoft Graph, iCalendar, Claude Code in headless mode.
+Works with Claude or ChatGPT, on a subscription or an API key, so parents use the AI they already pay for.
+One-line install on Windows with a guided setup: MitID, AI login and Outlook in about 10 minutes.
 
+How I designed it
+
+Only confirmed dates go in the calendar. Unclear items go to the email, so the calendar can be trusted.
+Plain-language rules. When it gets something wrong, I fix the rule file, not the code.
+Safe by default. Logins are encrypted, and messages from other parents can't make the AI read files or reach the internet.
+
+Stack: Python (uv), Aula client library, Microsoft Graph, Claude Code and Codex CLI in headless mode, Anthropic and OpenAI APIs, PowerShell.
 The code is private because it handles my family's data.
 
 ---
