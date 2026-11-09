@@ -6,15 +6,17 @@ The common thread: AI does the reading and sorting, and the design makes its mis
 
 ## 1. Job-search pipeline
 
-An automated pipeline that finds, filters and ranks product roles in Denmark, and prepares applications for me to review and send myself. Built on Mads Lorentzen's open-source [ai-job-search](https://github.com/ai-job-search-dev/ai-job-search), extended in a private repository because it holds personal data.
+Built on Mads Lorentzen's open-source [ai-job-search](https://github.com/ai-job-search-dev/ai-job-search), extended in a private repository because it holds personal data.
+
+An automated pipeline that finds, filters and ranks product roles in Denmark, and prepares applications for me to review and send myself.
 
 ### What it does
 
 - Searches six job portals on a schedule: Jobindex, Jobnet, Jobbank, Jobdanmark, Freehire and LinkedIn.
 - Filters with rules before any model is called: title tracks (product vs. project), an exclusion list and a commute zone based on my own postcode table.
 - Extracts deadline, work model, workplace and contact person, and flags postings with a phone number so I can call before applying.
-- Ranks the remaining jobs against my profile with reasoning in Danish. A cheaper model ranks, and a stronger model drafts and reviews.
-- Tracks every application and decline with a reason, and prepares what I need for the unemployment fund (Jobnet Joblog).
+- Ranks the remaining jobs against my profile, with reasoning in Danish. A cheaper model ranks; a stronger model drafts and reviews.
+- Logs every application, and every job I skip with the reason why, and prepares what I need for the unemployment fund (Jobnet Joblog).
 - Notifies my phone only for new relevant jobs, borderline cases or portal failures.
 
 ### How I designed it
@@ -25,9 +27,10 @@ An automated pipeline that finds, filters and ranks product roles in Denmark, an
 
 ### Contributions upstream
 
-- Five issues on bugs found in daily use (#534-#538), with measured hit counts per portal.
-- PR #637: Danish/Latin character folding for job keys, plus an audit and migration CLI with backup, collision checks and idempotency.
-- PR #653: one plain search term per portal call, with documented query syntax and a measurement table across six portals.
+- [PR #637](https://github.com/ai-job-search-dev/ai-job-search/pull/637) (merged): Danish/Latin character folding for job keys, plus an audit and migration CLI with backup, collision checks and idempotency.
+- [PR #653](https://github.com/ai-job-search-dev/ai-job-search/pull/653) (merged): one plain search term per portal call, with documented query syntax and a measurement table across six portals.
+- [PR #761](https://github.com/ai-job-search-dev/ai-job-search/pull/761) (merged): keeps Notion rows in sync when a job key changes, by matching on URL and re-keying the row.
+- Six issues on bugs found in daily use, all closed: [#534](https://github.com/ai-job-search-dev/ai-job-search/issues/534), [#535](https://github.com/ai-job-search-dev/ai-job-search/issues/535), [#536](https://github.com/ai-job-search-dev/ai-job-search/issues/536), [#537](https://github.com/ai-job-search-dev/ai-job-search/issues/537), [#538](https://github.com/ai-job-search-dev/ai-job-search/issues/538) and [#655](https://github.com/ai-job-search-dev/ai-job-search/issues/655). The search-term issue (#536) came with measured hit counts per portal.
 
 **Stack:** Python, Claude Code, PowerShell, git.
 
